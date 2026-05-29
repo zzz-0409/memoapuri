@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#020617" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="課題メモ" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>課題メモ</title>
+  <style>
+    :root{--bg:#020617;--panel:#0f172a;--panel2:#111827;--line:#1e293b;--text:#f8fafc;--muted:#94a3b8;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;--yellow:#facc15;}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at top,#334155 0%,#020617 42%,#020617 100%);color:var(--text);min-height:100vh;padding:14px 14px 90px;}
+    .app{max-width:760px;margin:0 auto}.hero,.card,.task,.nav{border:1px solid var(--line);background:rgba(15,23,42,.92);box-shadow:0 16px 50px rgba(0,0,0,.35)}
+    .hero{border-radius:30px;padding:20px;margin-bottom:14px}.top{display:flex;gap:12px;justify-content:space-between;align-items:flex-start}.sub{color:var(--muted);font-size:13px}.title{font-size:34px;font-weight:900;letter-spacing:-.04em;margin:4px 0}.next{font-weight:800;color:#bfdbfe;margin-top:6px;line-height:1.5}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}.stat{background:#020617;border:1px solid var(--line);border-radius:22px;padding:12px}.stat small{display:block;color:var(--muted);font-weight:700}.stat b{font-size:28px}.hint{display:flex;gap:8px;background:#020617;border-radius:20px;padding:12px;margin-top:12px;color:#cbd5e1;font-size:13px;line-height:1.45}
+    .card{border-radius:28px;padding:14px;margin-bottom:14px}.grid{display:grid;grid-template-columns:1fr;gap:10px}input,select,textarea{width:100%;border:0;outline:0;border-radius:18px;background:#1e293b;color:var(--text);padding:14px;font-size:16px}textarea{resize:vertical;min-height:52px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row2{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.checkline{height:48px;display:flex;align-items:center;gap:8px;background:#1e293b;border-radius:18px;padding:0 12px;color:#cbd5e1;font-weight:700;font-size:14px}.btn{border:0;border-radius:18px;padding:0 16px;min-height:48px;background:var(--blue);color:white;font-weight:900;font-size:15px;cursor:pointer}.btn.secondary{background:#1e293b}.btn.danger{background:#7f1d1d}.btn:active{transform:scale(.98)}
+    .filters{display:flex;gap:8px;overflow:auto;padding:2px 0 10px;margin-bottom:4px}.filter{white-space:nowrap;border:0;border-radius:16px;background:#1e293b;color:#cbd5e1;padding:10px 14px;font-weight:900}.filter.active{background:white;color:#020617}.search{position:relative;margin-bottom:12px}.search input{padding-left:42px}.search span{position:absolute;left:14px;top:13px;color:var(--muted)}
+    .task{border-radius:28px;padding:14px;margin-bottom:10px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:flex-start}.task.today{background:rgba(30,64,175,.55)}.task.done{opacity:.55}.circle{width:30px;height:30px;border-radius:999px;border:2px solid #94a3b8;background:transparent;color:white;font-weight:900}.done .circle{border-color:var(--green);background:var(--green)}.task-title{font-size:20px;font-weight:900;line-height:1.3;word-break:break-word}.done .task-title{text-decoration:line-through}.badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:7px}.badge{background:#1e293b;border-radius:12px;padding:5px 9px;color:#dbeafe;font-size:12px;font-weight:900}.badge.hot{background:var(--blue);color:white}.memo{color:#cbd5e1;margin-top:7px;line-height:1.5;word-break:break-word}.actions{display:flex;gap:6px;margin-top:10px}.mini{border:0;border-radius:14px;background:#1e293b;color:white;padding:9px 11px;font-weight:900}.mini.on{background:var(--blue)}.trash{border:0;border-radius:16px;background:#1e293b;color:white;width:42px;height:42px;font-size:18px}.empty{text-align:center;color:var(--muted);padding:28px;background:#0f172a;border:1px solid var(--line);border-radius:24px}.nav{position:fixed;left:12px;right:12px;bottom:12px;max-width:760px;margin:auto;border-radius:26px;padding:8px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;background:rgba(2,6,23,.96);backdrop-filter:blur(12px)}.nav button{border:0;border-radius:20px;background:#1e293b;color:white;padding:10px;font-weight:900}.nav .main{background:var(--blue)}
+    @media(min-width:680px){body{padding:24px 24px 40px}.title{font-size:48px}.grid{grid-template-columns:2fr 1fr 1fr}.wide{grid-column:1/-1}.nav{display:none}.hero{padding:26px}.task-title{font-size:24px}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="hero">
+      <div class="top">
+        <div><div class="sub">📱 俺専用・課題リマインダー</div><div class="title">今週やること</div><div id="next" class="next"></div></div>
+        <button class="btn" id="notifyBtn">🔔 通知ON</button>
+      </div>
+      <div class="stats"><div class="stat"><small>未完了</small><b id="todoCount">0</b></div><div class="stat"><small>今日</small><b id="todayCount">0</b></div><div class="stat"><small>通知</small><b id="notifyStatus">OFF</b></div></div>
+      <div class="hint">📌 スマホではSafari/Chromeの共有メニューから「ホーム画面に追加」。GitHub Pagesで公開すればアプリみたいに開けます。</div>
+    </section>
+
+    <section class="card">
+      <div class="grid">
+        <input id="title" placeholder="課題名 例：第5回小テスト" />
+        <input id="course" placeholder="科目名" />
+        <select id="weekday"><option>月</option><option>火</option><option>水</option><option>木</option><option>金</option><option>土</option><option>日</option></select>
+        <input id="dueTime" type="time" value="23:59" />
+        <textarea id="memo" class="wide" placeholder="メモ 例：400字以上、かぎかっこなし"></textarea>
+      </div>
+      <div class="row2" style="margin-top:10px"><label class="checkline"><input id="notifyCheck" type="checkbox" checked /> 締切1時間前に通知</label><button class="btn" id="addBtn">＋ 追加</button></div>
+    </section>
+
+    <div class="filters" id="filters"></div>
+    <div class="search"><span>🔍</span><input id="search" placeholder="検索" /></div>
+    <section id="list"></section>
+  </main>
+
+  <nav class="nav"><button id="allNav">全部</button><button class="main" id="todoNav">未完了</button><button id="resetNav">リセット</button></nav>
+
+<script>
+const STORAGE_KEY='weekly-task-memo-html-v1';
+const WEEKDAYS=['月','火','水','木','金','土','日'];
+const DAY_TO_JS={日:0,月:1,火:2,水:3,木:4,金:5,土:6};
+let filter='all';
+let tasks=loadTasks();
+function id(){return 'task-'+Date.now()+'-'+Math.random().toString(16).slice(2)}
+function todayJp(){return ['日','月','火','水','木','金','土'][new Date().getDay()]}
+function loadTasks(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||defaultTasks()}catch{return defaultTasks()}}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(tasks))}
+function defaultTasks(){return [
+{id:id(),title:'授業課題を確認',course:'共通',weekday:'月',dueTime:'23:59',memo:'LMS・Google Classroom・メールを確認',done:false,notify:true},
+{id:id(),title:'小テスト・提出物チェック',course:'共通',weekday:'水',dueTime:'23:59',memo:'期限が近いものを先にやる',done:false,notify:true}
+]}
+function nextDue(t){const now=new Date();const due=new Date(now);const [h,m]=(t.dueTime||'23:59').split(':').map(Number);due.setHours(h||23,m||59,0,0);let diff=(DAY_TO_JS[t.weekday]??1)-now.getDay();if(diff<0||(diff===0&&due<=now))diff+=7;due.setDate(now.getDate()+diff);return due}
+function dist(t){const h=Math.ceil((nextDue(t)-new Date())/36e5);if(h<=0)return 'まもなく';if(h<24)return 'あと'+h+'時間';return 'あと'+Math.ceil(h/24)+'日'}
+function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function notificationState(){if(!('Notification'in window))return '非対応';return Notification.permission==='granted'?'ON':Notification.permission==='denied'?'拒否':'OFF'}
+function renderFilters(){const items=['all','todo',...WEEKDAYS,'done'];filters.innerHTML=items.map(x=>`<button class="filter ${filter===x?'active':''}" data-filter="${x}">${x==='all'?'全部':x==='todo'?'未完了':x==='done'?'完了':x+'曜'}</button>`).join('')}
+function render(){save();renderFilters();const q=search.value.toLowerCase();const today=todayJp();const visible=[...tasks].filter(t=>{if(filter==='todo'&&t.done)return false;if(filter==='done'&&!t.done)return false;if(!['all','todo','done'].includes(filter)&&t.weekday!==filter)return false;return `${t.title} ${t.course} ${t.memo}`.toLowerCase().includes(q)}).sort((a,b)=>WEEKDAYS.indexOf(a.weekday)-WEEKDAYS.indexOf(b.weekday)||String(a.dueTime).localeCompare(String(b.dueTime)));
+todoCount.textContent=tasks.filter(t=>!t.done).length;todayCount.textContent=tasks.filter(t=>!t.done&&t.weekday===today).length;notifyStatus.textContent=notificationState();const n=[...tasks].filter(t=>!t.done).sort((a,b)=>nextDue(a)-nextDue(b))[0];next.textContent=n?`次：${n.course} / ${n.title} / ${dist(n)}`:'今週分は全部完了！';
+list.innerHTML=visible.length?visible.map(t=>`<article class="task ${t.done?'done':''} ${!t.done&&t.weekday===today?'today':''}"><button class="circle" data-toggle="${t.id}">${t.done?'✓':''}</button><div><div class="badges"><span class="badge">${esc(t.course)}</span><span class="badge">🕒 ${t.weekday}曜 ${esc(t.dueTime)}</span>${!t.done?`<span class="badge">${dist(t)}</span>`:''}${!t.done&&t.weekday===today?'<span class="badge hot">今日</span>':''}</div><div class="task-title">${esc(t.title)}</div>${t.memo?`<div class="memo">${esc(t.memo)}</div>`:''}<div class="actions"><button class="mini ${t.notify?'on':''}" data-notify="${t.id}">🔔 通知 ${t.notify?'ON':'OFF'}</button></div></div><button class="trash" data-delete="${t.id}">🗑</button></article>`).join(''):'<div class="empty">表示する課題がありません。</div>'}
+function addTask(){const v=title.value.trim();if(!v)return;tasks.push({id:id(),title:v,course:course.value.trim()||'未分類',weekday:weekday.value,dueTime:dueTime.value||'23:59',memo:memo.value.trim(),done:false,notify:notifyCheck.checked});title.value='';memo.value='';render()}
+addBtn.onclick=addTask;memo.onkeydown=e=>{if(e.key==='Enter'&&e.ctrlKey)addTask()};search.oninput=render;filters.onclick=e=>{if(e.target.dataset.filter){filter=e.target.dataset.filter;render()}};list.onclick=e=>{const del=e.target.dataset.delete,tog=e.target.dataset.toggle,not=e.target.dataset.notify;if(del)tasks=tasks.filter(t=>t.id!==del);if(tog)tasks=tasks.map(t=>t.id===tog?{...t,done:!t.done}:t);if(not)tasks=tasks.map(t=>t.id===not?{...t,notify:!t.notify}:t);render()};
+notifyBtn.onclick=async()=>{if(!('Notification'in window)){alert('このブラウザは通知に対応していません');return}const r=await Notification.requestPermission();if(r==='granted')new Notification('通知をオンにしました',{body:'締切1時間前に知らせます。ページを開いている間に動作します。'});render()};
+allNav.onclick=()=>{filter='all';render()};todoNav.onclick=()=>{filter='todo';render()};resetNav.onclick=()=>{tasks=tasks.map(t=>({...t,done:false}));render()};
+setInterval(()=>{if(!('Notification'in window)||Notification.permission!=='granted')return;const now=new Date();tasks.forEach(t=>{if(t.done||!t.notify)return;const due=nextDue(t);const min=Math.round((due-now)/60000);const key=`sent-${t.id}-${due.toDateString()}-${t.dueTime}`;if(min>=0&&min<=60&&!localStorage.getItem(key)){new Notification('課題の締切が近い',{body:`${t.course}：${t.title}（${t.weekday}曜 ${t.dueTime}）`});localStorage.setItem(key,'1')}})},60000);
+weekday.value=todayJp()==='日'?'月':todayJp();render();
+</script>
+</body>
+</html>
