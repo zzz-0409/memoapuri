@@ -3,80 +3,1297 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#020617" />
+  <meta name="theme-color" content="#f7f4ec" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="課題メモ" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>課題メモ</title>
+  <meta name="apple-mobile-web-app-title" content="予定メモ" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>予定メモ</title>
   <style>
-    :root{--bg:#020617;--panel:#0f172a;--panel2:#111827;--line:#1e293b;--text:#f8fafc;--muted:#94a3b8;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;--yellow:#facc15;}
-    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at top,#334155 0%,#020617 42%,#020617 100%);color:var(--text);min-height:100vh;padding:14px 14px 90px;}
-    .app{max-width:760px;margin:0 auto}.hero,.card,.task,.nav{border:1px solid var(--line);background:rgba(15,23,42,.92);box-shadow:0 16px 50px rgba(0,0,0,.35)}
-    .hero{border-radius:30px;padding:20px;margin-bottom:14px}.top{display:flex;gap:12px;justify-content:space-between;align-items:flex-start}.sub{color:var(--muted);font-size:13px}.title{font-size:34px;font-weight:900;letter-spacing:-.04em;margin:4px 0}.next{font-weight:800;color:#bfdbfe;margin-top:6px;line-height:1.5}
-    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}.stat{background:#020617;border:1px solid var(--line);border-radius:22px;padding:12px}.stat small{display:block;color:var(--muted);font-weight:700}.stat b{font-size:28px}.hint{display:flex;gap:8px;background:#020617;border-radius:20px;padding:12px;margin-top:12px;color:#cbd5e1;font-size:13px;line-height:1.45}
-    .card{border-radius:28px;padding:14px;margin-bottom:14px}.grid{display:grid;grid-template-columns:1fr;gap:10px}input,select,textarea{width:100%;border:0;outline:0;border-radius:18px;background:#1e293b;color:var(--text);padding:14px;font-size:16px}textarea{resize:vertical;min-height:52px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row2{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.checkline{height:48px;display:flex;align-items:center;gap:8px;background:#1e293b;border-radius:18px;padding:0 12px;color:#cbd5e1;font-weight:700;font-size:14px}.btn{border:0;border-radius:18px;padding:0 16px;min-height:48px;background:var(--blue);color:white;font-weight:900;font-size:15px;cursor:pointer}.btn.secondary{background:#1e293b}.btn.danger{background:#7f1d1d}.btn:active{transform:scale(.98)}
-    .filters{display:flex;gap:8px;overflow:auto;padding:2px 0 10px;margin-bottom:4px}.filter{white-space:nowrap;border:0;border-radius:16px;background:#1e293b;color:#cbd5e1;padding:10px 14px;font-weight:900}.filter.active{background:white;color:#020617}.search{position:relative;margin-bottom:12px}.search input{padding-left:42px}.search span{position:absolute;left:14px;top:13px;color:var(--muted)}
-    .task{border-radius:28px;padding:14px;margin-bottom:10px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:flex-start}.task.today{background:rgba(30,64,175,.55)}.task.done{opacity:.55}.circle{width:30px;height:30px;border-radius:999px;border:2px solid #94a3b8;background:transparent;color:white;font-weight:900}.done .circle{border-color:var(--green);background:var(--green)}.task-title{font-size:20px;font-weight:900;line-height:1.3;word-break:break-word}.done .task-title{text-decoration:line-through}.badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:7px}.badge{background:#1e293b;border-radius:12px;padding:5px 9px;color:#dbeafe;font-size:12px;font-weight:900}.badge.hot{background:var(--blue);color:white}.memo{color:#cbd5e1;margin-top:7px;line-height:1.5;word-break:break-word}.actions{display:flex;gap:6px;margin-top:10px}.mini{border:0;border-radius:14px;background:#1e293b;color:white;padding:9px 11px;font-weight:900}.mini.on{background:var(--blue)}.trash{border:0;border-radius:16px;background:#1e293b;color:white;width:42px;height:42px;font-size:18px}.empty{text-align:center;color:var(--muted);padding:28px;background:#0f172a;border:1px solid var(--line);border-radius:24px}.nav{position:fixed;left:12px;right:12px;bottom:12px;max-width:760px;margin:auto;border-radius:26px;padding:8px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;background:rgba(2,6,23,.96);backdrop-filter:blur(12px)}.nav button{border:0;border-radius:20px;background:#1e293b;color:white;padding:10px;font-weight:900}.nav .main{background:var(--blue)}
-    @media(min-width:680px){body{padding:24px 24px 40px}.title{font-size:48px}.grid{grid-template-columns:2fr 1fr 1fr}.wide{grid-column:1/-1}.nav{display:none}.hero{padding:26px}.task-title{font-size:24px}}
+    :root {
+      --paper: #f7f4ec;
+      --ink: #18202a;
+      --muted: #667085;
+      --line: #d8d4ca;
+      --panel: #fffdf8;
+      --field: #f0eee7;
+      --navy: #24384f;
+      --teal: #0f766e;
+      --coral: #d95f4b;
+      --amber: #b98019;
+      --green: #16803b;
+      --shadow: 0 18px 50px rgba(36, 56, 79, 0.18);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #d9e0df;
+      color: var(--ink);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .stage {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .phone {
+      width: 390px;
+      height: 844px;
+      background: var(--paper);
+      border: 1px solid rgba(24, 32, 42, 0.16);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      transform: scale(var(--app-scale, 1));
+      transform-origin: center center;
+    }
+
+    .topbar {
+      padding: 14px 14px 10px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .kicker {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .notify-button,
+    .primary,
+    .secondary,
+    .danger,
+    .filter,
+    .icon-button {
+      border: 0;
+      border-radius: 8px;
+      min-height: 42px;
+      font-weight: 900;
+    }
+
+    .notify-button {
+      padding: 0 12px;
+      background: var(--navy);
+      color: #fff;
+      white-space: nowrap;
+      font-size: 13px;
+    }
+
+    .next {
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      font-weight: 800;
+      line-height: 1.4;
+      min-height: 44px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      margin-top: 8px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 8px;
+      min-width: 0;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .stat b {
+      display: block;
+      margin-top: 1px;
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .content {
+      min-height: 0;
+      overflow: auto;
+      padding: 10px 12px 88px;
+      scroll-behavior: smooth;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .stack {
+      display: grid;
+      gap: 8px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .triple {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    label {
+      display: grid;
+      gap: 5px;
+      min-width: 0;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid transparent;
+      outline: 0;
+      border-radius: 8px;
+      background: var(--field);
+      color: var(--ink);
+      padding: 10px;
+      min-height: 42px;
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 76px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--teal);
+      background: #fff;
+    }
+
+    .primary {
+      background: var(--teal);
+      color: #fff;
+      padding: 0 14px;
+    }
+
+    .secondary {
+      background: var(--navy);
+      color: #fff;
+      padding: 0 12px;
+    }
+
+    .danger {
+      background: #8f2f24;
+      color: #fff;
+      padding: 0 12px;
+    }
+
+    .ghost {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--ink);
+    }
+
+    .checkline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: var(--field);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .checkline input {
+      width: 18px;
+      min-height: 18px;
+      accent-color: var(--teal);
+    }
+
+    .ai-image {
+      display: none;
+      width: 100%;
+      max-height: 160px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--field);
+    }
+
+    .ai-status {
+      min-height: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+
+    .filters {
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      padding: 1px 0 9px;
+      scrollbar-width: none;
+    }
+
+    .filters::-webkit-scrollbar { display: none; }
+
+    .filter {
+      flex: 0 0 auto;
+      padding: 0 12px;
+      background: var(--field);
+      color: var(--ink);
+      min-height: 36px;
+      font-size: 13px;
+    }
+
+    .filter.active {
+      background: var(--navy);
+      color: #fff;
+    }
+
+    .task {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 10px;
+      margin-bottom: 8px;
+      display: grid;
+      grid-template-columns: 32px 1fr 40px;
+      gap: 9px;
+      align-items: start;
+    }
+
+    .task.today {
+      border-color: rgba(15, 118, 110, 0.5);
+      background: #effaf7;
+    }
+
+    .task.overdue {
+      border-color: rgba(217, 95, 75, 0.55);
+      background: #fff1ed;
+    }
+
+    .task.done {
+      opacity: 0.58;
+    }
+
+    .toggle {
+      width: 32px;
+      height: 32px;
+      border: 2px solid var(--muted);
+      border-radius: 8px;
+      background: #fff;
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .done .toggle {
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .task-title {
+      font-size: 17px;
+      line-height: 1.35;
+      font-weight: 900;
+      overflow-wrap: anywhere;
+    }
+
+    .done .task-title {
+      text-decoration: line-through;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 6px;
+    }
+
+    .badge {
+      border-radius: 8px;
+      background: var(--field);
+      color: var(--navy);
+      padding: 4px 7px;
+      font-size: 11px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .badge.assignment { background: #fff2c6; color: #73520d; }
+    .badge.event { background: #e2f4f2; color: #0d5f58; }
+    .badge.memo { background: #e8e8f5; color: #404173; }
+    .badge.hot { background: var(--teal); color: #fff; }
+    .badge.late { background: var(--coral); color: #fff; }
+
+    .memo {
+      color: #48505a;
+      line-height: 1.45;
+      margin-top: 6px;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .thumb {
+      margin-top: 7px;
+      width: 100%;
+      max-height: 130px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+
+    .task-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .mini {
+      border: 0;
+      border-radius: 8px;
+      background: var(--field);
+      color: var(--ink);
+      min-height: 32px;
+      padding: 0 9px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .mini.on {
+      background: var(--navy);
+      color: #fff;
+    }
+
+    .icon-button {
+      width: 40px;
+      background: var(--field);
+      color: var(--ink);
+      font-size: 18px;
+    }
+
+    .empty {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--muted);
+      text-align: center;
+      padding: 24px 16px;
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
+    .nav {
+      height: 72px;
+      padding: 8px 12px max(8px, env(safe-area-inset-bottom));
+      border-top: 1px solid var(--line);
+      background: rgba(247, 244, 236, 0.96);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+    }
+
+    .nav button {
+      border: 0;
+      border-radius: 8px;
+      background: var(--field);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .nav button.active {
+      background: var(--navy);
+      color: #fff;
+    }
+
+    @media (max-width: 340px) {
+      .split,
+      .triple {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .notify-button {
+        font-size: 12px;
+        padding: 0 8px;
+      }
+    }
   </style>
 </head>
 <body>
-  <main class="app">
-    <section class="hero">
-      <div class="top">
-        <div><div class="sub">📱 俺専用・課題リマインダー</div><div class="title">今週やること</div><div id="next" class="next"></div></div>
-        <button class="btn" id="notifyBtn">🔔 通知ON</button>
-      </div>
-      <div class="stats"><div class="stat"><small>未完了</small><b id="todoCount">0</b></div><div class="stat"><small>今日</small><b id="todayCount">0</b></div><div class="stat"><small>通知</small><b id="notifyStatus">OFF</b></div></div>
-      <div class="hint">📌 スマホではSafari/Chromeの共有メニューから「ホーム画面に追加」。GitHub Pagesで公開すればアプリみたいに開けます。</div>
-    </section>
+  <div class="stage">
+    <main class="phone" aria-label="予定メモアプリ">
+      <header class="topbar">
+        <div class="kicker">課題・予定・メモ</div>
+        <div class="title-row">
+          <h1>予定メモ</h1>
+          <button class="notify-button" id="notifyBtn" type="button">通知ON</button>
+        </div>
+        <div class="next" id="next"></div>
+        <div class="stats">
+          <div class="stat"><span>未完了</span><b id="todoCount">0</b></div>
+          <div class="stat"><span>今日</span><b id="todayCount">0</b></div>
+          <div class="stat"><span>通知</span><b id="notifyStatus">OFF</b></div>
+        </div>
+      </header>
 
-    <section class="card">
-      <div class="grid">
-        <input id="title" placeholder="課題名 例：第5回小テスト" />
-        <input id="course" placeholder="科目名" />
-        <select id="weekday"><option>月</option><option>火</option><option>水</option><option>木</option><option>金</option><option>土</option><option>日</option></select>
-        <input id="dueTime" type="time" value="23:59" />
-        <textarea id="memo" class="wide" placeholder="メモ 例：400字以上、かぎかっこなし"></textarea>
-      </div>
-      <div class="row2" style="margin-top:10px"><label class="checkline"><input id="notifyCheck" type="checkbox" checked /> 締切1時間前に通知</label><button class="btn" id="addBtn">＋ 追加</button></div>
-    </section>
+      <section class="content" id="content">
+        <section class="panel" id="formPanel">
+          <div class="section-title">予定を追加</div>
+          <div class="stack">
+            <input id="title" placeholder="タイトル" autocomplete="off" />
+            <div class="split">
+              <label>種類
+                <select id="kind">
+                  <option value="assignment">課題</option>
+                  <option value="event">予定</option>
+                  <option value="memo">メモ</option>
+                </select>
+              </label>
+              <label>科目・分類
+                <input id="category" placeholder="英語、部活など" autocomplete="off" />
+              </label>
+            </div>
+            <div class="split">
+              <label>くり返し
+                <select id="repeatType">
+                  <option value="weekly">毎週</option>
+                  <option value="once">その日限り</option>
+                </select>
+              </label>
+              <label id="weekdayLabel">曜日
+                <select id="weekday">
+                  <option value="月">月</option>
+                  <option value="火">火</option>
+                  <option value="水">水</option>
+                  <option value="木">木</option>
+                  <option value="金">金</option>
+                  <option value="土">土</option>
+                  <option value="日">日</option>
+                </select>
+              </label>
+              <label id="dateLabel" hidden>日付
+                <input id="dueDate" type="date" />
+              </label>
+            </div>
+            <div class="triple">
+              <label>時間
+                <input id="dueTime" type="time" value="23:59" />
+              </label>
+              <label>通知
+                <select id="remindMinutes">
+                  <option value="0">時間ちょうど</option>
+                  <option value="5">5分前</option>
+                  <option value="10">10分前</option>
+                  <option value="30">30分前</option>
+                  <option value="60" selected>1時間前</option>
+                  <option value="120">2時間前</option>
+                  <option value="1440">1日前</option>
+                  <option value="custom">自分で設定</option>
+                </select>
+              </label>
+              <label id="customRemindLabel" hidden>分前
+                <input id="customRemind" type="number" min="0" max="10080" step="5" value="60" />
+              </label>
+            </div>
+            <textarea id="memo" placeholder="メモ"></textarea>
+            <label class="checkline"><input id="notifyCheck" type="checkbox" checked /> この予定を通知する</label>
+            <button class="primary" id="addBtn" type="button">追加</button>
+          </div>
+        </section>
 
-    <div class="filters" id="filters"></div>
-    <div class="search"><span>🔍</span><input id="search" placeholder="検索" /></div>
-    <section id="list"></section>
-  </main>
+        <section class="panel" id="aiPanel">
+          <div class="section-title">
+            <span>AI予定作成</span>
+            <button class="secondary ghost" id="clearAiBtn" type="button">消去</button>
+          </div>
+          <div class="stack">
+            <textarea id="aiPrompt" placeholder="例: 来週火曜16時に歯医者。毎週金曜18時に部活。数学プリントは6/10 23:59まで。"></textarea>
+            <input id="aiImage" type="file" accept="image/*" />
+            <img id="aiPreview" class="ai-image" alt="読み込んだ写真" />
+            <details>
+              <summary>写真解析API</summary>
+              <div class="stack" style="margin-top:8px">
+                <input id="apiKey" type="password" placeholder="OpenAI API key" autocomplete="off" />
+                <input id="apiModel" value="gpt-4.1-mini" autocomplete="off" />
+              </div>
+            </details>
+            <div class="split">
+              <button class="secondary" id="aiBtn" type="button">予定案を作る</button>
+              <button class="primary" id="applyAiBtn" type="button" disabled>案を追加</button>
+            </div>
+            <div class="ai-status" id="aiStatus"></div>
+          </div>
+        </section>
 
-  <nav class="nav"><button id="allNav">全部</button><button class="main" id="todoNav">未完了</button><button id="resetNav">リセット</button></nav>
+        <div class="filters" id="filters"></div>
+        <label>検索
+          <input id="search" placeholder="タイトル、分類、メモ" />
+        </label>
+        <section id="list" style="margin-top:10px"></section>
+      </section>
 
-<script>
-const STORAGE_KEY='weekly-task-memo-html-v1';
-const WEEKDAYS=['月','火','水','木','金','土','日'];
-const DAY_TO_JS={日:0,月:1,火:2,水:3,木:4,金:5,土:6};
-let filter='all';
-let tasks=loadTasks();
-function id(){return 'task-'+Date.now()+'-'+Math.random().toString(16).slice(2)}
-function todayJp(){return ['日','月','火','水','木','金','土'][new Date().getDay()]}
-function loadTasks(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||defaultTasks()}catch{return defaultTasks()}}
-function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(tasks))}
-function defaultTasks(){return [
-{id:id(),title:'授業課題を確認',course:'共通',weekday:'月',dueTime:'23:59',memo:'LMS・Google Classroom・メールを確認',done:false,notify:true},
-{id:id(),title:'小テスト・提出物チェック',course:'共通',weekday:'水',dueTime:'23:59',memo:'期限が近いものを先にやる',done:false,notify:true}
-]}
-function nextDue(t){const now=new Date();const due=new Date(now);const [h,m]=(t.dueTime||'23:59').split(':').map(Number);due.setHours(h||23,m||59,0,0);let diff=(DAY_TO_JS[t.weekday]??1)-now.getDay();if(diff<0||(diff===0&&due<=now))diff+=7;due.setDate(now.getDate()+diff);return due}
-function dist(t){const h=Math.ceil((nextDue(t)-new Date())/36e5);if(h<=0)return 'まもなく';if(h<24)return 'あと'+h+'時間';return 'あと'+Math.ceil(h/24)+'日'}
-function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-function notificationState(){if(!('Notification'in window))return '非対応';return Notification.permission==='granted'?'ON':Notification.permission==='denied'?'拒否':'OFF'}
-function renderFilters(){const items=['all','todo',...WEEKDAYS,'done'];filters.innerHTML=items.map(x=>`<button class="filter ${filter===x?'active':''}" data-filter="${x}">${x==='all'?'全部':x==='todo'?'未完了':x==='done'?'完了':x+'曜'}</button>`).join('')}
-function render(){save();renderFilters();const q=search.value.toLowerCase();const today=todayJp();const visible=[...tasks].filter(t=>{if(filter==='todo'&&t.done)return false;if(filter==='done'&&!t.done)return false;if(!['all','todo','done'].includes(filter)&&t.weekday!==filter)return false;return `${t.title} ${t.course} ${t.memo}`.toLowerCase().includes(q)}).sort((a,b)=>WEEKDAYS.indexOf(a.weekday)-WEEKDAYS.indexOf(b.weekday)||String(a.dueTime).localeCompare(String(b.dueTime)));
-todoCount.textContent=tasks.filter(t=>!t.done).length;todayCount.textContent=tasks.filter(t=>!t.done&&t.weekday===today).length;notifyStatus.textContent=notificationState();const n=[...tasks].filter(t=>!t.done).sort((a,b)=>nextDue(a)-nextDue(b))[0];next.textContent=n?`次：${n.course} / ${n.title} / ${dist(n)}`:'今週分は全部完了！';
-list.innerHTML=visible.length?visible.map(t=>`<article class="task ${t.done?'done':''} ${!t.done&&t.weekday===today?'today':''}"><button class="circle" data-toggle="${t.id}">${t.done?'✓':''}</button><div><div class="badges"><span class="badge">${esc(t.course)}</span><span class="badge">🕒 ${t.weekday}曜 ${esc(t.dueTime)}</span>${!t.done?`<span class="badge">${dist(t)}</span>`:''}${!t.done&&t.weekday===today?'<span class="badge hot">今日</span>':''}</div><div class="task-title">${esc(t.title)}</div>${t.memo?`<div class="memo">${esc(t.memo)}</div>`:''}<div class="actions"><button class="mini ${t.notify?'on':''}" data-notify="${t.id}">🔔 通知 ${t.notify?'ON':'OFF'}</button></div></div><button class="trash" data-delete="${t.id}">🗑</button></article>`).join(''):'<div class="empty">表示する課題がありません。</div>'}
-function addTask(){const v=title.value.trim();if(!v)return;tasks.push({id:id(),title:v,course:course.value.trim()||'未分類',weekday:weekday.value,dueTime:dueTime.value||'23:59',memo:memo.value.trim(),done:false,notify:notifyCheck.checked});title.value='';memo.value='';render()}
-addBtn.onclick=addTask;memo.onkeydown=e=>{if(e.key==='Enter'&&e.ctrlKey)addTask()};search.oninput=render;filters.onclick=e=>{if(e.target.dataset.filter){filter=e.target.dataset.filter;render()}};list.onclick=e=>{const del=e.target.dataset.delete,tog=e.target.dataset.toggle,not=e.target.dataset.notify;if(del)tasks=tasks.filter(t=>t.id!==del);if(tog)tasks=tasks.map(t=>t.id===tog?{...t,done:!t.done}:t);if(not)tasks=tasks.map(t=>t.id===not?{...t,notify:!t.notify}:t);render()};
-notifyBtn.onclick=async()=>{if(!('Notification'in window)){alert('このブラウザは通知に対応していません');return}const r=await Notification.requestPermission();if(r==='granted')new Notification('通知をオンにしました',{body:'締切1時間前に知らせます。ページを開いている間に動作します。'});render()};
-allNav.onclick=()=>{filter='all';render()};todoNav.onclick=()=>{filter='todo';render()};resetNav.onclick=()=>{tasks=tasks.map(t=>({...t,done:false}));render()};
-setInterval(()=>{if(!('Notification'in window)||Notification.permission!=='granted')return;const now=new Date();tasks.forEach(t=>{if(t.done||!t.notify)return;const due=nextDue(t);const min=Math.round((due-now)/60000);const key=`sent-${t.id}-${due.toDateString()}-${t.dueTime}`;if(min>=0&&min<=60&&!localStorage.getItem(key)){new Notification('課題の締切が近い',{body:`${t.course}：${t.title}（${t.weekday}曜 ${t.dueTime}）`});localStorage.setItem(key,'1')}})},60000);
-weekday.value=todayJp()==='日'?'月':todayJp();render();
-</script>
+      <nav class="nav" aria-label="表示切替">
+        <button id="navAll" class="active" type="button">全部</button>
+        <button id="navTodo" type="button">未完了</button>
+        <button id="navToday" type="button">今日</button>
+        <button id="navAi" type="button">AI</button>
+      </nav>
+    </main>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'schedule-memo-mobile-v2';
+    const WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土'];
+    const FILTERS = [
+      ['all', '全部'],
+      ['todo', '未完了'],
+      ['today', '今日'],
+      ['assignment', '課題'],
+      ['event', '予定'],
+      ['memo', 'メモ'],
+      ['done', '完了']
+    ];
+    const KIND_LABEL = { assignment: '課題', event: '予定', memo: 'メモ' };
+    const KIND_CLASS = { assignment: 'assignment', event: 'event', memo: 'memo' };
+
+    let items = loadItems();
+    let filter = 'all';
+    let aiDrafts = [];
+    let aiImageData = '';
+
+    const els = {
+      notifyBtn: document.getElementById('notifyBtn'),
+      next: document.getElementById('next'),
+      todoCount: document.getElementById('todoCount'),
+      todayCount: document.getElementById('todayCount'),
+      notifyStatus: document.getElementById('notifyStatus'),
+      title: document.getElementById('title'),
+      kind: document.getElementById('kind'),
+      category: document.getElementById('category'),
+      repeatType: document.getElementById('repeatType'),
+      weekday: document.getElementById('weekday'),
+      weekdayLabel: document.getElementById('weekdayLabel'),
+      dateLabel: document.getElementById('dateLabel'),
+      dueDate: document.getElementById('dueDate'),
+      dueTime: document.getElementById('dueTime'),
+      remindMinutes: document.getElementById('remindMinutes'),
+      customRemindLabel: document.getElementById('customRemindLabel'),
+      customRemind: document.getElementById('customRemind'),
+      memo: document.getElementById('memo'),
+      notifyCheck: document.getElementById('notifyCheck'),
+      addBtn: document.getElementById('addBtn'),
+      aiPrompt: document.getElementById('aiPrompt'),
+      aiImage: document.getElementById('aiImage'),
+      aiPreview: document.getElementById('aiPreview'),
+      apiKey: document.getElementById('apiKey'),
+      apiModel: document.getElementById('apiModel'),
+      aiBtn: document.getElementById('aiBtn'),
+      applyAiBtn: document.getElementById('applyAiBtn'),
+      clearAiBtn: document.getElementById('clearAiBtn'),
+      aiStatus: document.getElementById('aiStatus'),
+      filters: document.getElementById('filters'),
+      search: document.getElementById('search'),
+      list: document.getElementById('list'),
+      content: document.getElementById('content'),
+      navAll: document.getElementById('navAll'),
+      navTodo: document.getElementById('navTodo'),
+      navToday: document.getElementById('navToday'),
+      navAi: document.getElementById('navAi')
+    };
+
+    function uid() {
+      return 'item-' + Date.now() + '-' + Math.random().toString(16).slice(2);
+    }
+
+    function pad(num) {
+      return String(num).padStart(2, '0');
+    }
+
+    function todayDateString() {
+      const d = new Date();
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    }
+
+    function loadItems() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        return Array.isArray(parsed) ? parsed : defaultItems();
+      } catch {
+        return defaultItems();
+      }
+    }
+
+    function defaultItems() {
+      const today = new Date();
+      const nextWeek = new Date(today);
+      nextWeek.setDate(today.getDate() + 7);
+      return [
+        {
+          id: uid(),
+          title: '提出物を確認',
+          kind: 'assignment',
+          category: '学校',
+          repeatType: 'weekly',
+          weekday: '月',
+          dueDate: '',
+          dueTime: '23:59',
+          remindMinutes: 60,
+          memo: 'Classroom、LMS、メールを見る',
+          done: false,
+          notify: true,
+          imageData: ''
+        },
+        {
+          id: uid(),
+          title: '予定を整理',
+          kind: 'memo',
+          category: '生活',
+          repeatType: 'once',
+          weekday: '',
+          dueDate: `${nextWeek.getFullYear()}-${pad(nextWeek.getMonth() + 1)}-${pad(nextWeek.getDate())}`,
+          dueTime: '20:00',
+          remindMinutes: 30,
+          memo: '今週やることを書き出す',
+          done: false,
+          notify: true,
+          imageData: ''
+        }
+      ];
+    }
+
+    function save() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    function escapeHtml(value) {
+      return String(value || '').replace(/[&<>'"]/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[char]));
+    }
+
+    function notificationState() {
+      if (!('Notification' in window)) return '非対応';
+      if (Notification.permission === 'granted') return 'ON';
+      if (Notification.permission === 'denied') return '拒否';
+      return 'OFF';
+    }
+
+    function setDefaultFormDate() {
+      els.dueDate.value = todayDateString();
+      els.weekday.value = WEEKDAYS[new Date().getDay()] === '日' ? '月' : WEEKDAYS[new Date().getDay()];
+    }
+
+    function getReminderMinutes() {
+      if (els.remindMinutes.value === 'custom') {
+        return Math.max(0, Number(els.customRemind.value || 0));
+      }
+      return Number(els.remindMinutes.value);
+    }
+
+    function normalizeItem(item) {
+      return {
+        id: item.id || uid(),
+        title: String(item.title || '').trim(),
+        kind: ['assignment', 'event', 'memo'].includes(item.kind) ? item.kind : 'event',
+        category: String(item.category || '').trim() || '未分類',
+        repeatType: item.repeatType === 'weekly' ? 'weekly' : 'once',
+        weekday: item.repeatType === 'weekly' ? (item.weekday || WEEKDAYS[new Date().getDay()]) : '',
+        dueDate: item.repeatType === 'weekly' ? '' : (item.dueDate || todayDateString()),
+        dueTime: item.dueTime || '23:59',
+        remindMinutes: Math.max(0, Number(item.remindMinutes ?? 60)),
+        memo: String(item.memo || '').trim(),
+        done: Boolean(item.done),
+        notify: item.notify !== false,
+        imageData: item.imageData || ''
+      };
+    }
+
+    function dueDateTime(item) {
+      const now = new Date();
+      const [hour, minute] = String(item.dueTime || '23:59').split(':').map(Number);
+      const due = new Date(now);
+      due.setHours(Number.isFinite(hour) ? hour : 23, Number.isFinite(minute) ? minute : 59, 0, 0);
+
+      if (item.repeatType === 'weekly') {
+        const targetDay = WEEKDAYS.indexOf(item.weekday);
+        let diff = targetDay - now.getDay();
+        if (diff < 0 || (diff === 0 && due <= now)) diff += 7;
+        due.setDate(now.getDate() + diff);
+        return due;
+      }
+
+      const date = item.dueDate || todayDateString();
+      const once = new Date(`${date}T${item.dueTime || '23:59'}:00`);
+      return Number.isNaN(once.getTime()) ? due : once;
+    }
+
+    function dueLabel(item) {
+      if (item.repeatType === 'weekly') return `毎週${item.weekday} ${item.dueTime}`;
+      return `${item.dueDate} ${item.dueTime}`;
+    }
+
+    function distanceLabel(item) {
+      const minutes = Math.round((dueDateTime(item) - new Date()) / 60000);
+      if (minutes < 0) return `${Math.abs(Math.floor(minutes / 60))}時間遅れ`;
+      if (minutes < 60) return `あと${minutes}分`;
+      if (minutes < 1440) return `あと${Math.ceil(minutes / 60)}時間`;
+      return `あと${Math.ceil(minutes / 1440)}日`;
+    }
+
+    function isToday(item) {
+      const due = dueDateTime(item);
+      const now = new Date();
+      return due.getFullYear() === now.getFullYear()
+        && due.getMonth() === now.getMonth()
+        && due.getDate() === now.getDate();
+    }
+
+    function isOverdue(item) {
+      return !item.done && dueDateTime(item) < new Date();
+    }
+
+    function visibleItems() {
+      const q = els.search.value.trim().toLowerCase();
+      return [...items].filter(item => {
+        if (filter === 'todo' && item.done) return false;
+        if (filter === 'today' && (!isToday(item) || item.done)) return false;
+        if (filter === 'done' && !item.done) return false;
+        if (['assignment', 'event', 'memo'].includes(filter) && item.kind !== filter) return false;
+        if (q) {
+          const haystack = `${item.title} ${item.category} ${item.memo}`.toLowerCase();
+          if (!haystack.includes(q)) return false;
+        }
+        return true;
+      }).sort((a, b) => {
+        if (a.done !== b.done) return a.done ? 1 : -1;
+        return dueDateTime(a) - dueDateTime(b);
+      });
+    }
+
+    function renderFilters() {
+      els.filters.innerHTML = FILTERS.map(([value, label]) => (
+        `<button class="filter ${filter === value ? 'active' : ''}" data-filter="${value}" type="button">${label}</button>`
+      )).join('');
+    }
+
+    function renderNav() {
+      els.navAll.classList.toggle('active', filter === 'all');
+      els.navTodo.classList.toggle('active', filter === 'todo');
+      els.navToday.classList.toggle('active', filter === 'today');
+    }
+
+    function render() {
+      save();
+      renderFilters();
+      renderNav();
+
+      const openItems = items.filter(item => !item.done);
+      const nextItem = [...openItems].sort((a, b) => dueDateTime(a) - dueDateTime(b))[0];
+      els.todoCount.textContent = openItems.length;
+      els.todayCount.textContent = openItems.filter(isToday).length;
+      els.notifyStatus.textContent = notificationState();
+      els.next.textContent = nextItem
+        ? `次: ${nextItem.category} / ${nextItem.title} / ${distanceLabel(nextItem)}`
+        : '未完了の予定はありません';
+
+      const list = visibleItems();
+      els.list.innerHTML = list.length ? list.map(item => {
+        const late = isOverdue(item);
+        const today = isToday(item);
+        return `
+          <article class="task ${item.done ? 'done' : ''} ${today && !item.done ? 'today' : ''} ${late ? 'overdue' : ''}">
+            <button class="toggle" data-toggle="${item.id}" type="button" aria-label="完了切替">${item.done ? '✓' : ''}</button>
+            <div>
+              <div class="badges">
+                <span class="badge ${KIND_CLASS[item.kind]}">${KIND_LABEL[item.kind]}</span>
+                <span class="badge">${escapeHtml(item.category)}</span>
+                <span class="badge">${escapeHtml(dueLabel(item))}</span>
+                <span class="badge">${item.remindMinutes === 0 ? '通知: 時間ちょうど' : `通知: ${item.remindMinutes}分前`}</span>
+                ${today && !item.done ? '<span class="badge hot">今日</span>' : ''}
+                ${late ? '<span class="badge late">期限超過</span>' : ''}
+              </div>
+              <div class="task-title">${escapeHtml(item.title)}</div>
+              ${item.memo ? `<div class="memo">${escapeHtml(item.memo)}</div>` : ''}
+              ${item.imageData ? `<img class="thumb" src="${item.imageData}" alt="添付写真" />` : ''}
+              <div class="task-actions">
+                <button class="mini ${item.notify ? 'on' : ''}" data-notify="${item.id}" type="button">通知 ${item.notify ? 'ON' : 'OFF'}</button>
+                <button class="mini" data-edit="${item.id}" type="button">編集</button>
+              </div>
+            </div>
+            <button class="icon-button" data-delete="${item.id}" type="button" aria-label="削除">×</button>
+          </article>
+        `;
+      }).join('') : '<div class="empty">表示する予定はありません</div>';
+    }
+
+    function resetForm() {
+      els.title.value = '';
+      els.kind.value = 'assignment';
+      els.category.value = '';
+      els.repeatType.value = 'weekly';
+      els.dueTime.value = '23:59';
+      els.remindMinutes.value = '60';
+      els.customRemind.value = '60';
+      els.memo.value = '';
+      els.notifyCheck.checked = true;
+      setDefaultFormDate();
+      updateRepeatControls();
+      updateReminderControls();
+    }
+
+    function itemFromForm() {
+      const title = els.title.value.trim();
+      if (!title) return null;
+      return normalizeItem({
+        title,
+        kind: els.kind.value,
+        category: els.category.value,
+        repeatType: els.repeatType.value,
+        weekday: els.weekday.value,
+        dueDate: els.dueDate.value,
+        dueTime: els.dueTime.value,
+        remindMinutes: getReminderMinutes(),
+        memo: els.memo.value,
+        done: false,
+        notify: els.notifyCheck.checked,
+        imageData: ''
+      });
+    }
+
+    function addItem() {
+      const item = itemFromForm();
+      if (!item) {
+        els.title.focus();
+        return;
+      }
+      items.push(item);
+      resetForm();
+      render();
+    }
+
+    function editItem(id) {
+      const item = items.find(entry => entry.id === id);
+      if (!item) return;
+      els.title.value = item.title;
+      els.kind.value = item.kind;
+      els.category.value = item.category;
+      els.repeatType.value = item.repeatType;
+      els.weekday.value = item.weekday || '月';
+      els.dueDate.value = item.dueDate || todayDateString();
+      els.dueTime.value = item.dueTime;
+      els.remindMinutes.value = ['0', '5', '10', '30', '60', '120', '1440'].includes(String(item.remindMinutes))
+        ? String(item.remindMinutes)
+        : 'custom';
+      els.customRemind.value = item.remindMinutes;
+      els.memo.value = item.memo;
+      els.notifyCheck.checked = item.notify;
+      items = items.filter(entry => entry.id !== id);
+      updateRepeatControls();
+      updateReminderControls();
+      render();
+      document.getElementById('formPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      els.title.focus();
+    }
+
+    function updateRepeatControls() {
+      const weekly = els.repeatType.value === 'weekly';
+      els.weekdayLabel.hidden = !weekly;
+      els.dateLabel.hidden = weekly;
+    }
+
+    function updateReminderControls() {
+      els.customRemindLabel.hidden = els.remindMinutes.value !== 'custom';
+    }
+
+    function parseDate(text) {
+      const now = new Date();
+      if (/今日/.test(text)) return todayDateString();
+      if (/明日/.test(text)) {
+        const d = new Date(now);
+        d.setDate(now.getDate() + 1);
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+      }
+      const iso = text.match(/(20\d{2})[-/年](\d{1,2})[-/月](\d{1,2})/);
+      if (iso) return `${iso[1]}-${pad(iso[2])}-${pad(iso[3])}`;
+      const md = text.match(/(?:^|[^\d])(\d{1,2})[\/月](\d{1,2})(?:日)?/);
+      if (md) {
+        const month = Number(md[1]);
+        const day = Number(md[2]);
+        const year = month < now.getMonth() + 1 ? now.getFullYear() + 1 : now.getFullYear();
+        return `${year}-${pad(month)}-${pad(day)}`;
+      }
+      return todayDateString();
+    }
+
+    function parseWeekday(text) {
+      const hit = text.match(/[日月火水木金土](?:曜|曜日)?/);
+      return hit ? hit[0][0] : WEEKDAYS[new Date().getDay()];
+    }
+
+    function parseTime(text) {
+      const hm = text.match(/(\d{1,2})[:：時](\d{1,2})?/);
+      if (!hm) return /締切|提出|課題|宿題/.test(text) ? '23:59' : '09:00';
+      const hour = Math.min(23, Number(hm[1]));
+      const minute = hm[2] === undefined || hm[2] === '' ? 0 : Math.min(59, Number(hm[2]));
+      return `${pad(hour)}:${pad(minute)}`;
+    }
+
+    function inferKind(text) {
+      if (/課題|宿題|提出|レポート|プリント|テスト|小テスト|締切/.test(text)) return 'assignment';
+      if (/メモ|覚え|買う|買い物|持って/.test(text)) return 'memo';
+      return 'event';
+    }
+
+    function inferCategory(text, kind) {
+      const subject = text.match(/(国語|数学|英語|理科|社会|歴史|地理|物理|化学|生物|体育|音楽|美術|家庭科|情報|部活|塾|病院|歯医者|バイト)/);
+      if (subject) return subject[1];
+      return kind === 'assignment' ? '学校' : kind === 'memo' ? 'メモ' : '予定';
+    }
+
+    function cleanTitle(text) {
+      return text
+        .replace(/毎週/g, '')
+        .replace(/今日|明日/g, '')
+        .replace(/(20\d{2})[-/年](\d{1,2})[-/月](\d{1,2})日?/g, '')
+        .replace(/\d{1,2}[\/月]\d{1,2}日?/g, '')
+        .replace(/[日月火水木金土](?:曜|曜日)?/g, '')
+        .replace(/\d{1,2}[:：時]\d{0,2}/g, '')
+        .replace(/まで|に|、|。/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function localAiDrafts(text) {
+      const lines = text.split(/\n|。|;/).map(line => line.trim()).filter(Boolean);
+      return lines.map(line => {
+        const kind = inferKind(line);
+        const weekly = /毎週|毎[日月火水木金土]/.test(line);
+        return normalizeItem({
+          title: cleanTitle(line) || line.slice(0, 28),
+          kind,
+          category: inferCategory(line, kind),
+          repeatType: weekly ? 'weekly' : 'once',
+          weekday: parseWeekday(line),
+          dueDate: parseDate(line),
+          dueTime: parseTime(line),
+          remindMinutes: kind === 'assignment' ? 60 : 30,
+          memo: 'AI予定作成から追加',
+          done: false,
+          notify: true,
+          imageData: aiImageData
+        });
+      });
+    }
+
+    function showDrafts(drafts, source) {
+      aiDrafts = drafts.slice(0, 8);
+      els.applyAiBtn.disabled = aiDrafts.length === 0;
+      if (!aiDrafts.length) {
+        els.aiStatus.textContent = '予定案を作れませんでした';
+        return;
+      }
+      els.aiStatus.innerHTML = `${source}: ${aiDrafts.length}件の案<br>` + aiDrafts
+        .map(item => `${escapeHtml(KIND_LABEL[item.kind])} / ${escapeHtml(item.title)} / ${escapeHtml(dueLabel(item))}`)
+        .join('<br>');
+    }
+
+    async function callOpenAiVision() {
+      const key = els.apiKey.value.trim();
+      if (!key) return null;
+
+      const content = [
+        {
+          type: 'input_text',
+          text: [
+            '日本語の予定管理アプリ用に、画像または文章から予定を抽出してください。',
+            '返すJSONはitems配列だけです。',
+            'kindはassignment,event,memoのいずれか。',
+            'repeatTypeはweeklyまたはonce。',
+            'weekdayは日月火水木金土の1文字。',
+            'dueDateはYYYY-MM-DD。毎週なら空文字。',
+            'dueTimeはHH:MM。',
+            'remindMinutesは0以上の整数。',
+            'titleは短く自然な日本語。',
+            '入力文:',
+            els.aiPrompt.value.trim() || '画像から予定を抽出'
+          ].join('\n')
+        }
+      ];
+      if (aiImageData) {
+        content.push({ type: 'input_image', image_url: aiImageData, detail: 'auto' });
+      }
+
+      const schema = {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          items: {
+            type: 'array',
+            maxItems: 8,
+            items: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                title: { type: 'string' },
+                kind: { type: 'string', enum: ['assignment', 'event', 'memo'] },
+                category: { type: 'string' },
+                repeatType: { type: 'string', enum: ['weekly', 'once'] },
+                weekday: { type: 'string' },
+                dueDate: { type: 'string' },
+                dueTime: { type: 'string' },
+                remindMinutes: { type: 'integer' },
+                memo: { type: 'string' }
+              },
+              required: ['title', 'kind', 'category', 'repeatType', 'weekday', 'dueDate', 'dueTime', 'remindMinutes', 'memo']
+            }
+          }
+        },
+        required: ['items']
+      };
+
+      const response = await fetch('https://api.openai.com/v1/responses', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${key}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: els.apiModel.value.trim() || 'gpt-4.1-mini',
+          input: [{ role: 'user', content }],
+          text: {
+            format: {
+              type: 'json_schema',
+              name: 'schedule_items',
+              schema,
+              strict: true
+            }
+          }
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+      const data = await response.json();
+      const text = data.output_text || data.output?.flatMap(part => part.content || [])
+        .find(part => part.type === 'output_text')?.text;
+      const parsed = JSON.parse(text || '{"items":[]}');
+      return parsed.items.map(item => normalizeItem({ ...item, imageData: aiImageData, notify: true, done: false }));
+    }
+
+    async function buildAiDrafts() {
+      const text = els.aiPrompt.value.trim();
+      if (!text && !aiImageData) {
+        els.aiStatus.textContent = '文章か写真を入れてください';
+        return;
+      }
+
+      els.aiBtn.disabled = true;
+      els.aiStatus.textContent = '予定案を作成中';
+      try {
+        const apiDrafts = await callOpenAiVision();
+        if (apiDrafts) {
+          showDrafts(apiDrafts, '写真解析API');
+        } else {
+          const drafts = localAiDrafts(text || '写真メモ 今日 09:00');
+          showDrafts(drafts, 'ローカル解析');
+        }
+      } catch (error) {
+        const fallback = localAiDrafts(text || '写真メモ 今日 09:00');
+        showDrafts(fallback, 'API失敗のためローカル解析');
+      } finally {
+        els.aiBtn.disabled = false;
+      }
+    }
+
+    function applyAiDrafts() {
+      if (!aiDrafts.length) return;
+      items.push(...aiDrafts.map(item => normalizeItem({ ...item, id: uid() })));
+      aiDrafts = [];
+      els.applyAiBtn.disabled = true;
+      els.aiStatus.textContent = '予定に追加しました';
+      render();
+    }
+
+    function clearAi() {
+      aiDrafts = [];
+      aiImageData = '';
+      els.aiPrompt.value = '';
+      els.aiImage.value = '';
+      els.aiPreview.removeAttribute('src');
+      els.aiPreview.style.display = 'none';
+      els.applyAiBtn.disabled = true;
+      els.aiStatus.textContent = '';
+    }
+
+    els.addBtn.addEventListener('click', addItem);
+    els.repeatType.addEventListener('change', updateRepeatControls);
+    els.remindMinutes.addEventListener('change', updateReminderControls);
+    els.search.addEventListener('input', render);
+    els.filters.addEventListener('click', event => {
+      if (!event.target.dataset.filter) return;
+      filter = event.target.dataset.filter;
+      render();
+    });
+    els.list.addEventListener('click', event => {
+      const id = event.target.dataset.toggle || event.target.dataset.delete || event.target.dataset.notify || event.target.dataset.edit;
+      if (!id) return;
+      if (event.target.dataset.toggle) items = items.map(item => item.id === id ? { ...item, done: !item.done } : item);
+      if (event.target.dataset.delete) items = items.filter(item => item.id !== id);
+      if (event.target.dataset.notify) items = items.map(item => item.id === id ? { ...item, notify: !item.notify } : item);
+      if (event.target.dataset.edit) editItem(id);
+      render();
+    });
+    els.aiImage.addEventListener('change', () => {
+      const file = els.aiImage.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        aiImageData = String(reader.result || '');
+        els.aiPreview.src = aiImageData;
+        els.aiPreview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    });
+    els.aiBtn.addEventListener('click', buildAiDrafts);
+    els.applyAiBtn.addEventListener('click', applyAiDrafts);
+    els.clearAiBtn.addEventListener('click', clearAi);
+    els.navAll.addEventListener('click', () => { filter = 'all'; render(); });
+    els.navTodo.addEventListener('click', () => { filter = 'todo'; render(); });
+    els.navToday.addEventListener('click', () => { filter = 'today'; render(); });
+    els.navAi.addEventListener('click', () => {
+      document.getElementById('aiPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    els.notifyBtn.addEventListener('click', async () => {
+      if (!('Notification' in window)) {
+        alert('このブラウザは通知に対応していません');
+        return;
+      }
+      const result = await Notification.requestPermission();
+      if (result === 'granted') {
+        new Notification('通知をオンにしました', { body: '設定した時間に予定を知らせます' });
+      }
+      render();
+    });
+
+    setInterval(() => {
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+      const now = new Date();
+      items.forEach(item => {
+        if (item.done || !item.notify) return;
+        const due = dueDateTime(item);
+        const notifyAt = new Date(due.getTime() - item.remindMinutes * 60000);
+        const diff = now - notifyAt;
+        const key = `notified-${item.id}-${due.toISOString()}-${item.remindMinutes}`;
+        if (diff >= 0 && diff < 60000 && !localStorage.getItem(key)) {
+          new Notification(item.title, {
+            body: `${item.category} / ${dueLabel(item)}`
+          });
+          localStorage.setItem(key, '1');
+        }
+      });
+    }, 15000);
+
+    function fitPhone() {
+      const margin = 20;
+      const scale = Math.min(
+        1,
+        (window.innerWidth - margin) / 390,
+        (window.innerHeight - margin) / 844
+      );
+      document.documentElement.style.setProperty('--app-scale', Math.max(0.68, scale).toFixed(3));
+    }
+
+    window.addEventListener('resize', fitPhone);
+    window.addEventListener('orientationchange', fitPhone);
+
+    fitPhone();
+    setDefaultFormDate();
+    updateRepeatControls();
+    updateReminderControls();
+    render();
+  </script>
 </body>
 </html>
