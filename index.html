@@ -29,11 +29,15 @@
     html,
     body {
       margin: 0;
+      width: 100%;
+      height: 100%;
       min-height: 100%;
+      overflow: hidden;
       background: #d9e0df;
       color: var(--ink);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       letter-spacing: 0;
+      overscroll-behavior: none;
     }
 
     button,
@@ -49,9 +53,10 @@
     }
 
     .stage {
-      min-height: 100svh;
-      display: grid;
-      place-items: center;
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100dvh;
       overflow: hidden;
       padding: 0;
     }
@@ -66,7 +71,10 @@
       overflow: hidden;
       display: grid;
       grid-template-rows: auto 1fr auto;
-      transform: scale(var(--app-scale, 1));
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(var(--app-scale, 1));
       transform-origin: center center;
     }
 
@@ -163,6 +171,8 @@
       overflow: auto;
       padding: 10px 12px 88px;
       scroll-behavior: smooth;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
     }
 
     .panel {
@@ -585,7 +595,7 @@
             <button class="secondary ghost" id="clearAiBtn" type="button">消去</button>
           </div>
           <div class="stack">
-            <textarea id="aiPrompt" placeholder="例: 来週火曜16時に歯医者。毎週金曜18時に部活。数学プリントは6/10 23:59まで。"></textarea>
+            <textarea id="aiPrompt" placeholder="例: シフト表の写真から山田のところだけ予定に追加して。 または、来週火曜16時に歯医者。"></textarea>
             <input id="aiImage" type="file" accept="image/*" />
             <img id="aiPreview" class="ai-image" alt="読み込んだ写真" />
             <details>
@@ -1082,27 +1092,40 @@
     async function callOpenAiVision() {
       const key = els.apiKey.value.trim();
       if (!key) return null;
+      const today = todayDateString();
 
       const content = [
         {
           type: 'input_text',
           text: [
-            '日本語の予定管理アプリ用に、画像または文章から予定を抽出してください。',
+            'あなたは日本語の予定管理アプリに入れる予定を作るAIです。',
+            `今日の日付は${today}です。年が写真や文章にない場合は、今日以降の最も自然な日付として推定してください。`,
+            '',
+            '画像は予定表、シフト表、時間割、提出物一覧、カレンダー、手書きメモの可能性があります。',
+            'ユーザー指示は抽出条件です。写真全体を予定にするのではなく、ユーザーが指定した名前、科目、担当、日付範囲、条件に一致する行・列・枠だけを予定にしてください。',
+            '例: 「山田のところだけ」「この名前だけ」「A班だけ」「数学だけ」と書かれていたら、それ以外は除外します。',
+            'シフト表の場合は、対象者の各勤務枠を1件ずつ予定にしてください。日付、開始時刻、終了時刻、店舗名や役割が読める場合はmemoに入れてください。',
+            '終了時刻がある場合、titleは「シフト 09:00-17:00」のように短くし、dueTimeには開始時刻を入れてください。',
+            '課題や提出物の場合は期限の日時をdueDate/dueTimeにしてください。',
+            '毎週の予定だと明確に書かれている場合だけrepeatTypeをweeklyにします。シフト表や単発予定はonceにします。',
+            '不明な項目は推測しすぎず、memoに「未読取」や根拠を書いてください。',
+            '',
             '返すJSONはitems配列だけです。',
-            'kindはassignment,event,memoのいずれか。',
+            'kindはassignment,event,memoのいずれか。シフトや予約や用事はeventです。',
             'repeatTypeはweeklyまたはonce。',
-            'weekdayは日月火水木金土の1文字。',
-            'dueDateはYYYY-MM-DD。毎週なら空文字。',
-            'dueTimeはHH:MM。',
-            'remindMinutesは0以上の整数。',
+            'weekdayは日月火水木金土の1文字。onceでも日付から分かる曜日を入れてください。',
+            'dueDateはYYYY-MM-DD。weeklyなら空文字。',
+            'dueTimeはHH:MM。時刻が不明なら09:00。',
+            'remindMinutesは0以上の整数。シフトや予定は30、課題は60を基本にしてください。',
             'titleは短く自然な日本語。',
-            '入力文:',
-            els.aiPrompt.value.trim() || '画像から予定を抽出'
+            '',
+            'ユーザー指示:',
+            els.aiPrompt.value.trim() || '画像から予定を抽出してください。'
           ].join('\n')
         }
       ];
       if (aiImageData) {
-        content.push({ type: 'input_image', image_url: aiImageData, detail: 'auto' });
+        content.push({ type: 'input_image', image_url: aiImageData, detail: 'high' });
       }
 
       const schema = {
@@ -1173,9 +1196,13 @@
       els.aiBtn.disabled = true;
       els.aiStatus.textContent = '予定案を作成中';
       try {
+        if (aiImageData && !els.apiKey.value.trim()) {
+          els.aiStatus.textContent = '写真と指示から予定を作るには、写真解析APIにOpenAI API keyを入れてください';
+          return;
+        }
         const apiDrafts = await callOpenAiVision();
         if (apiDrafts) {
-          showDrafts(apiDrafts, '写真解析API');
+          showDrafts(apiDrafts, aiImageData ? '写真と指示から作成' : 'AI解析');
         } else {
           const drafts = localAiDrafts(text || '写真メモ 今日 09:00');
           showDrafts(drafts, 'ローカル解析');
